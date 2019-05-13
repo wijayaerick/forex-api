@@ -14,4 +14,14 @@ class CurrencyPairServiceImpl : CurrencyPairService {
     override fun getAllCurrencyPairs(): MutableList<CurrencyPair> {
         return currencyPairRepository.findAll()
     }
+
+    override fun createCurrencyPair(base: String, quote: String) {
+        if (currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency(base, quote) == null) {
+            currencyPairRepository.save(CurrencyPair(null, base, quote))
+        }
+    }
+
+    override fun deleteCurrencyPair(id: Long) {
+        currencyPairRepository.deleteById(id)
+    }
 }

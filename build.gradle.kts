@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.Project
 
 plugins {
     val kotlinVersion = "1.3.31"
@@ -32,9 +33,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation(kotlin("script-runtime"))
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-    implementation(kotlin("script-runtime"))
+    testRuntime("org.junit.jupiter:junit-jupiter-engine")
+    testRuntime("com.h2database:h2")
 }
 
 tasks.withType<KotlinCompile> {
