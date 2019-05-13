@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface CurrencyPairRepository : JpaRepository<CurrencyPair, Long> {
-    fun findFirstByBaseCurrencyAndQuoteCurrency(base: String, quote: String) : CurrencyPair?
+    fun findFirstByBaseCurrencyAndQuoteCurrency(base: String, quote: String): CurrencyPair?
 }

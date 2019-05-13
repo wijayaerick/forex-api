@@ -15,9 +15,11 @@ class CurrencyPairServiceImpl : CurrencyPairService {
         return currencyPairRepository.findAll()
     }
 
-    override fun createCurrencyPair(base: String, quote: String) {
-        if (currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency(base, quote) == null) {
-            currencyPairRepository.save(CurrencyPair(null, base, quote))
+    override fun insertCurrencyPair(currencyPair: CurrencyPair) {
+        if (!currencyPair.isBaseAndQuoteEqual() &&
+            currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency(currencyPair.baseCurrency,
+                currencyPair.quoteCurrency) == null) {
+            currencyPairRepository.save(currencyPair)
         }
     }
 

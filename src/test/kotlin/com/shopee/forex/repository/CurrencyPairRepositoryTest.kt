@@ -1,11 +1,10 @@
 package com.shopee.forex.repository
 
 import com.shopee.forex.entity.CurrencyPair
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotSame
-import junit.framework.Assert.assertNull
-import junit.framework.Assert.assertTrue
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -26,18 +25,19 @@ class CurrencyPairRepositoryTest {
     @Test
     @Order(1)
     fun givenSingleCurrencyPair_ItShouldReturnCurrencyPair() {
-        currencyPairRepository.saveAndFlush(CurrencyPair(null, "IDR", "JPN"))
+        currencyPairRepository.saveAndFlush(CurrencyPair( "IDR", "JPN")) // id=1 in DB
         assertEquals(CurrencyPair(1L, "IDR", "JPN").hashCode(),
             currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency("IDR", "JPN")?.hashCode())
+        assertNull(currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency("USD", "JPN"))
     }
 
     @Test
     @Order(2)
     fun givenMultipleCurrencyPairs_ItShouldReturnCurrencyPairList() {
         currencyPairRepository.saveAll(listOf(
-            CurrencyPair(null, "USD", "IDR"),
-            CurrencyPair(null, "IDR", "USD"),
-            CurrencyPair(null, "IDR", "JPN")
+            CurrencyPair( "USD", "IDR"), // id=2 in DB
+            CurrencyPair( "IDR", "USD"), // id=3 in DB
+            CurrencyPair( "IDR", "JPN")  // id=4 in DB
         ))
         currencyPairRepository.flush()
         val pairs = currencyPairRepository.findAll()
@@ -51,9 +51,9 @@ class CurrencyPairRepositoryTest {
     @Order(3)
     fun itShouldDeleteCurrencyPairById() {
         currencyPairRepository.saveAll(listOf(
-            CurrencyPair(null, "USD", "IDR"),
-            CurrencyPair(null, "IDR", "USD"),
-            CurrencyPair(null, "IDR", "JPN")
+            CurrencyPair("USD", "IDR"), // id=5 in DB
+            CurrencyPair("IDR", "USD"), // id=6 in DB
+            CurrencyPair("IDR", "JPN")  // id=7 in DB
         ))
         currencyPairRepository.deleteById(5L)
         assertEquals(2, currencyPairRepository.findAll().size)
