@@ -11,14 +11,6 @@ COPY ddl /app/ddl
 
 USER root
 
-RUN ls -a
-
-# RUN gradle tasks --stacktrace
-
-# RUN gradle build --stacktrace
-
-# RUN gradle test --stacktrace
-
 EXPOSE 8080
 
 CMD ["gradle", "bootRun"]

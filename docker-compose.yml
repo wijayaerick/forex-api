@@ -28,6 +28,7 @@ services:
       FOREX_DB_HOST: db
       FOREX_DB_PASSWORD: ${FOREX_DB_PASSWORD}
       FOREX_DB_PORT: ${FOREX_DB_PORT}
+
 volumes:
   db_data:
     driver: local
