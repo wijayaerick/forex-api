@@ -1,5 +1,7 @@
 # Forex API
 
+[![Build Status](https://travis-ci.com/wijayaerick/forex-api.svg?token=CV23yUvkPiZhxgH7CxfW&branch=master)](https://travis-ci.com/wijayaerick/forex-api)
+
 API for managing foreign exchange for currencies
 
 ## Running the API
