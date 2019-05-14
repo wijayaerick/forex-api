@@ -1,0 +1,32 @@
+version: '3.0'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - ${FOREX_DB_PORT}:${FOREX_DB_PORT}
+    environment:
+      POSTGRES_USER: ${FOREX_DB_USER}
+      POSTGRES_PASSWORD: ${FOREX_DB_PASSWORD}
+      POSTGRES_DB: ${FOREX_DB_NAME}
+    volumes:
+      - ./ddl/create.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 8080:8080
+    links:
+      - db
+    environment:
+      FOREX_DB_NAME: ${FOREX_DB_NAME}
+      FOREX_DB_USER: ${FOREX_DB_USER}
+      FOREX_DB_PASSWORD: ${FOREX_DB_PASSWORD}
+      FOREX_DB_PORT: ${FOREX_DB_PORT}
+volumes:
+  db_data:
+    driver: local
