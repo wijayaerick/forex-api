@@ -13,4 +13,7 @@ data class ExchangeRate(
     var date: LocalDate,
     @ManyToOne @JoinColumn(name = "currency_pair_id") var currencyPair: CurrencyPair,
     var rate: Double
-)
+) {
+    constructor(date: LocalDate, currencyPair: CurrencyPair, rate: Double)
+        : this(null, date, currencyPair, rate)
+}

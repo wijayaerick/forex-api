@@ -23,8 +23,12 @@ class CurrencyPairController {
     }
 
     @PostMapping
-    fun insertCurrencyPair(@RequestBody currencyPair: CurrencyPair) {
-        currencyPairService.insertCurrencyPair(currencyPair)
+    fun insertCurrencyPair(@RequestBody json: Map<String, String>) {
+        val base = json["from"]
+        val quote = json["to"]
+        if (base != null && quote != null) {
+            currencyPairService.insertCurrencyPair(base, quote)
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package com.shopee.forex.service.impl
 
+import com.shopee.forex.entity.CurrencyPair
 import com.shopee.forex.entity.ExchangeRate
 import com.shopee.forex.repository.CurrencyPairRepository
 import com.shopee.forex.repository.ExchangeRateRepository
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.util.stream.Collectors.groupingBy
+import kotlin.streams.toList
 
 @Service
 class ExchangeRateServiceImpl : ExchangeRateService {
@@ -21,14 +23,24 @@ class ExchangeRateServiceImpl : ExchangeRateService {
     @Autowired
     private lateinit var currencyPairRepository: CurrencyPairRepository
 
-    override fun insertExchangeRate(exchangeRate: ExchangeRate) {
-        val currencyPair = currencyPairRepository.findByBaseCurrencyAndQuoteCurrency(
-            exchangeRate.currencyPair.baseCurrency, exchangeRate.currencyPair.quoteCurrency)
-        if (currencyPair == null && !exchangeRate.currencyPair.isBaseAndQuoteEqual()) {
+    override fun getAllExchangeRates(): MutableList<ExchangeRate> {
+        return exchangeRateRepository.findAll()
+    }
 
-            val inserted = currencyPairRepository.saveAndFlush(exchangeRate.currencyPair)
-            exchangeRate.currencyPair.id = inserted.id
-            exchangeRateRepository.save(exchangeRate)
+    override fun insertExchangeRate(date: LocalDate, base: String, quote: String, rate: Double) {
+        if (base != quote) {
+            val currencyPair = currencyPairRepository.findByBaseCurrencyAndQuoteCurrency(base, quote)
+            if (currencyPair == null) {
+                val inserted = currencyPairRepository.saveAndFlush(CurrencyPair(base, quote))
+                exchangeRateRepository.save(ExchangeRate(date, inserted, rate))
+            } else {
+                val exchangeRate = exchangeRateRepository.findAllByCurrencyPair_Id(currencyPair.id!!).find {
+                    exchangeRate -> exchangeRate.date == date
+                }
+                if (exchangeRate == null) {
+                    exchangeRateRepository.save(ExchangeRate(date, currencyPair, rate))
+                }
+            }
         }
     }
 
@@ -67,10 +79,10 @@ class ExchangeRateServiceImpl : ExchangeRateService {
 
     private fun calculateExchangeRateTrend(dailyRates: List<DailyRate>): ExchangeRateTrend {
         val size = dailyRates.size
-        val rates = dailyRates.stream().mapToDouble { dailyRate -> dailyRate.rate }
-        val sum = rates.sum()
+        val rates = dailyRates.stream().mapToDouble { dailyRate -> dailyRate.rate }.toList()
+        val sum = rates.stream().mapToDouble { e -> e }.sum()
         val avg = sum / size
-        val variance = rates.map { rate -> (rate - avg) * (rate - avg) }.sum() / (size - 1)
+        val variance = rates.stream().mapToDouble { rate -> (rate - avg) * (rate - avg) }.sum() / (size - 1)
         return ExchangeRateTrend(avg, variance, dailyRates)
     }
 

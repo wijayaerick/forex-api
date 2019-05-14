@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @RestController
 @RequestMapping("/exchange-rates")
@@ -20,9 +21,20 @@ class ExchangeRateController {
     @Autowired
     private lateinit var exchangeRateService: ExchangeRateService
 
+    @GetMapping
+    fun getAllExchangeRate(): MutableList<ExchangeRate> {
+        return exchangeRateService.getAllExchangeRates()
+    }
+
     @PostMapping
-    fun insertExchangeRate(@RequestBody exchangeRate: ExchangeRate) {
-        exchangeRateService.insertExchangeRate(exchangeRate)
+    fun insertExchangeRate(@RequestBody json: Map<String, String>) {
+        val date = LocalDate.parse(json["date"], DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val base = json["from"]
+        val quote = json["to"]
+        val rate = json["rate"]?.toDouble()
+        if (date != null && base != null && quote != null && rate != null) {
+            exchangeRateService.insertExchangeRate(date, base, quote, rate)
+        }
     }
 
     @GetMapping("/trend")
