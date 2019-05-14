@@ -25,9 +25,12 @@ configure<JavaPluginExtension> {
 
 repositories {
 	mavenCentral()
+    jcenter()
 }
 
 dependencies {
+    implementation("commons-io:commons-io:2.4")
+    implementation("com.jayway.jsonpath:json-path")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -37,7 +40,7 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.platform:junit-platform-runner")
-    testImplementation("org.mockito:mockito-all")
+    testImplementation("org.mockito:mockito-all:1.10.19")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntime("org.junit.jupiter:junit-jupiter-engine")
     testRuntime("com.h2database:h2")

@@ -17,7 +17,7 @@ class CurrencyPairServiceImpl : CurrencyPairService {
 
     override fun insertCurrencyPair(currencyPair: CurrencyPair) {
         if (!currencyPair.isBaseAndQuoteEqual() &&
-            currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency(currencyPair.baseCurrency,
+            currencyPairRepository.findByBaseCurrencyAndQuoteCurrency(currencyPair.baseCurrency,
                 currencyPair.quoteCurrency) == null) {
             currencyPairRepository.save(currencyPair)
         }

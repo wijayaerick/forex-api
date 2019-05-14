@@ -27,8 +27,8 @@ class CurrencyPairRepositoryTest {
     fun givenSingleCurrencyPair_ItShouldReturnCurrencyPair() {
         currencyPairRepository.saveAndFlush(CurrencyPair( "IDR", "JPN")) // id=1 in DB
         assertEquals(CurrencyPair(1L, "IDR", "JPN").hashCode(),
-            currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency("IDR", "JPN")?.hashCode())
-        assertNull(currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency("USD", "JPN"))
+            currencyPairRepository.findByBaseCurrencyAndQuoteCurrency("IDR", "JPN")?.hashCode())
+        assertNull(currencyPairRepository.findByBaseCurrencyAndQuoteCurrency("USD", "JPN"))
     }
 
     @Test
@@ -57,6 +57,6 @@ class CurrencyPairRepositoryTest {
         ))
         currencyPairRepository.deleteById(5L)
         assertEquals(2, currencyPairRepository.findAll().size)
-        assertNull(currencyPairRepository.findFirstByBaseCurrencyAndQuoteCurrency("USD", "IDR"))
+        assertNull(currencyPairRepository.findByBaseCurrencyAndQuoteCurrency("USD", "IDR"))
     }
 }

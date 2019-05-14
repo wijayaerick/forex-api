@@ -17,12 +17,12 @@ class CurrencyPairController {
     @Autowired
     private lateinit var currencyPairService: CurrencyPairService
 
-    @GetMapping("/")
+    @GetMapping
     fun getAllCurrencyPairs(): MutableList<CurrencyPair> {
         return currencyPairService.getAllCurrencyPairs()
     }
 
-    @PostMapping("/")
+    @PostMapping
     fun insertCurrencyPair(@RequestBody currencyPair: CurrencyPair) {
         currencyPairService.insertCurrencyPair(currencyPair)
     }
